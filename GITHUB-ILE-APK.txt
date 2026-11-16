@@ -1,0 +1,41 @@
+BİLGİSAYARA PROGRAM KURMADAN APK ÜRETME (GitHub ile, ücretsiz)
+==============================================================
+GitHub'ın ücretsiz sunucuları APK'yı sizin yerinize derler. Yaklaşık 10 dakika sürer, bir bilgisayar gerekir.
+
+1) github.com'da ücretsiz hesap açın.
+2) Sağ üstteki + > "New repository". Adı: atolye-defteri. "Private" (özel) seçebilirsiniz. "Create repository" deyin.
+3) Açılan sayfada "uploading an existing file" bağlantısına tıklayın.
+4) Bu zip'i bilgisayarda ayıklayın. İçindeki TÜM dosya ve klasörleri (app, gradle, build.gradle, settings.gradle,
+   gradle.properties, README.txt ...) seçip GitHub sayfasına sürükleyin. Yükleme bitince "Commit changes" deyin.
+5) Depo ana sayfasında "Add file" > "Create new file" deyin.
+   - Dosya adı kutusuna aynen şunu yazın:  .github/workflows/apk.yml
+     (yazarken "/" işaretleri klasör oluşturur)
+   - Büyük kutuya GITHUB-apk.yml dosyasının içeriğini yapıştırın.
+   - "Commit changes" deyin.
+6) Üstteki "Actions" sekmesine girin. "APK" adlı işlem kendiliğinden başlar (başlamadıysa soldan "APK" > "Run workflow").
+   Yeşil tik çıkana kadar bekleyin (yaklaşık 5-10 dakika). Kırmızı çarpı çıkarsa işleme tıklayıp hata yazısını bana gönderin.
+7) Biten işleme tıklayın, sayfanın altındaki "Artifacts" bölümünden "AtolyeDefteri-apk" dosyasını indirin.
+   Zip'in içinden app-debug.apk çıkar. Telefona gönderip kurun (bilinmeyen kaynaklara izin verin).
+
+Not: İlk açılışta telefonda Admin hesabı oluşturulur. Ortak veri tabanı için "Sunucu ayarı"nı girin.
+
+KIRMIZI ÇARPI ÇIKARSA
+- "Annotations" bölümündeki sarı uyarılar (Node.js 20, setup-java...) hata DEĞİLDİR, yok sayın.
+- Asıl hata için: Actions > başarısız işleme tıklayın > soldaki "build" > kırmızı çarpılı ADIMA tıklayın,
+  altında çıkan son 20-30 satırı kopyalayıp gönderin.
+- En sık sebep: dosyaların depoya bir klasörün İÇİNDE yüklenmesi. Depo ana sayfasında doğrudan "app",
+  "gradle", "build.gradle", "settings.gradle" dosyaları görünmeli. Yeni sürüm bunu kendisi bulmaya çalışır.
+- apk.yml dosyasını GitHub'da açıp (kalem simgesi) içeriğini GITHUB-apk.yml'in yeni haliyle değiştirin.
+
+SON GÜNCELLEME (setup-android adımı kaldırıldı)
+GitHub'ın bilgisayarlarında Android SDK zaten kurulu. "android-actions/setup-android" adımı "tools paketi bulunamadı"
+hatası verdiği için kaldırıldı, yerine sadece lisansları kabul eden bir adım kondu.
+Hata alırsanız yine kırmızı adımın son 30 satırını gönderin.
+
+"PAKETİN AYRIŞTIRILMASINDA BİR SORUN OLUŞTU" HATASI
+1) GitHub'dan inen dosya bir ZIP'tir. Önce zip'i açın (telefonda dosyaya dokunup "Çıkar"), içinden app-debug.apk çıkar.
+   Zip'in kendisine ya da yarım inmiş dosyaya dokunmayın.
+2) Telefonunuzun Android sürümü 10'dan eskiyse bu hatayı verir. Bu yeni sürümde en düşük sürüm Android 7 yapıldı
+   (app/build.gradle içinde minSdk 24). Ayarlar > Telefon hakkında > Android sürümü bölümünden bakabilirsiniz.
+3) APK'yı GitHub'a yeni dosyalarla yeniden derletin: bu zip'teki "app" klasörünü GitHub'daki depoya
+   (Add file > Upload files) sürükleyip aynı adlı dosyaların üzerine yazın, Commit changes deyin.

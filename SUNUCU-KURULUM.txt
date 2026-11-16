@@ -1,0 +1,44 @@
+ORTAK VERİ TABANI (SUPABASE, ÜCRETSİZ) KURULUMU
+=================================================
+Bir kez yapılır. Telefon ya da bilgisayar tarayıcısından olur.
+
+1) https://supabase.com adresinde ücretsiz hesap açın (Google ile girilebilir).
+2) "New project" ile yeni proje oluşturun. İsim ve veri tabanı şifresi verin (şifreyi not alın),
+   bölge olarak size yakın bir yer (ör. Frankfurt) seçin. Proje birkaç dakikada hazır olur.
+3) Sol menüden "SQL Editor" > "New query" açın ve aşağıdaki kodu yapıştırın.
+   KODUNUZ yazan iki yeri kendi belirleyeceğiniz gizli bir kelimeyle değiştirin (ör. atolye2026x).
+   Bu kelime "Atölye kodu"dur; uygulamada da aynısını gireceksiniz. Sonra "Run" deyin.
+
+----- KODU BURADAN BAŞLATIN -----
+create table if not exists public.kayit (
+  kol text not null,
+  id text not null,
+  veri jsonb,
+  guncel bigint not null,
+  silindi boolean not null default false,
+  primary key (kol, id)
+);
+create index if not exists kayit_guncel on public.kayit (guncel);
+alter table public.kayit enable row level security;
+drop policy if exists atolye on public.kayit;
+create policy atolye on public.kayit for all
+  using ((current_setting('request.headers', true)::json ->> 'x-client-info') = 'KODUNUZ')
+  with check ((current_setting('request.headers', true)::json ->> 'x-client-info') = 'KODUNUZ');
+----- KODU BURADA BİTİRİN -----
+
+4) Sol menüde "Project Settings" > "API" bölümünden iki şeyi kopyalayın:
+   - Project URL (https://xxxxxxxx.supabase.co biçiminde)
+   - "anon public" anahtarı (ya da "publishable key")
+5) Her telefonda uygulamayı açın. İlk kurulum ya da giriş ekranındaki "Sunucu ayarı" butonuna basın:
+   Proje adresi, anahtar ve Atölye kodunu girip "Bağlan" deyin.
+   - İlk telefonda: Admin hesabını oluşturun. Mevcut verileriniz sunucuya yüklenir.
+   - Diğer telefonlarda: Sunucu ayarını girin, kullanıcılar gelir. "Yeni kullanıcı talebi" gönderin,
+     Admin ya da Müdür onaylayınca giriş yapın.
+
+NOTLAR
+- Veriler değişince birkaç saniyede eşitlenir; uygulama açıkken 15 saniyede bir de kontrol edilir.
+- İnternet yokken telefon çalışır, bağlanınca değişiklikler gönderilir.
+- Aynı kayıt iki telefonda aynı anda değiştirilirse son eşitlenen kazanır.
+- Ücretsiz Supabase projesi 1 hafta hiç kullanılmazsa duraklatılır; panelden "Restore" ile açılır.
+- Atölye kodunu ve anahtarı başkalarıyla paylaşmayın.
+- Yedek için Supabase panelinde Table Editor > kayit > Export (CSV) kullanabilirsiniz.
